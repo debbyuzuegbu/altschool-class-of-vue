@@ -1,36 +1,55 @@
 <template>
+  <div>
   <h1>Color Picker Game</h1>
-
-  <div>{{ message }}</div>
-
-  <button v-for="color in colors" :key="color" @click="matchColor(color)">
-    {{ color }}
+  <div class="body" :style="{'background-color': background}">
+  <div>{{ res }}</div>
+  </div>
+  <div class="buttons">
+  <button v-for="color in colors" :key="color" @click="match(color)">
+  {{ color }}
   </button>
-</template>
-
-<script>
-import { ref, reactive } from "@vue/reactivity";
-
-export default {
+  </div>
+  </div>
+  </template>
+  
+  <script>
+  import { matchColor } from "../composables/UseColorPicker";
+  import { ref } from "vue";
+  export default {
   setup() {
-    const colors = ["green", "red", "blue", "purple"];
-    let message = ref("Pick a color...");
-
-    const matchColor = (value) => {
-      // do a random color based on the array index;
-      const randomNumber = Math.floor(Math.random() * 3) + 1; //between 1 - 4
-
-      if (colors[randomNumber] === value) {
-        message.value = `You win... [answer: ${colors[randomNumber]}]`;
-        return;
-      }
-
-      message.value = `You loose [answer: ${colors[randomNumber]}]`;
-    };
-
-    return { colors, message, matchColor };
-  },
-};
-</script>
-
-<style></style>
+  const colors = ["red", "green", "blue", "purple"];
+  let res = ref("Pick a color...");
+  let background = ref('');
+  const match = (color) => {
+  let { message, messageColor } = matchColor(color, colors);
+  background.value = messageColor
+  res.value = message;
+  };
+  return { res, match, colors, background };
+  }
+  };
+  </script>
+  
+  
+  <style scoped>
+  h1 {
+    background-color: red;
+  }
+  .body {
+  display: flex;
+  width: 400px;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  color: white;
+  background-color: grey;
+  border-radius: 20px;
+  margin: 10px;
+  }
+  
+  .buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  }
+</style>
+  
